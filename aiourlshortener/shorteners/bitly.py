@@ -8,6 +8,7 @@ import aiohttp
 
 from .base import BaseShortener
 from ..exceptions import ShorteningError, ExpandingError, FetchError
+from ..utils import validate_url
 
 
 class Bitly(BaseShortener):
@@ -21,6 +22,7 @@ class Bitly(BaseShortener):
         super(Bitly, self).__init__(**kwargs)
 
     @coroutine
+    @validate_url
     def short(self, url: str) -> str:
         params = {'access_token': self.access_token, 'longUrl': url, 'format': 'json'}
         response = {}
@@ -36,6 +38,7 @@ class Bitly(BaseShortener):
         raise ShorteningError('Detected an api change for Bitly')
 
     @coroutine
+    @validate_url
     def expand(self, url: str) -> str:
         params = {'access_token': self.access_token, 'link': url, 'format': 'json'}
         response = {}

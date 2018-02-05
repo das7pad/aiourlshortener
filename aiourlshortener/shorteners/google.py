@@ -9,6 +9,7 @@ import aiohttp
 
 from .base import BaseShortener
 from ..exceptions import ShorteningError, ExpandingError, FetchError
+from ..utils import validate_url
 
 
 class Google(BaseShortener):
@@ -21,6 +22,7 @@ class Google(BaseShortener):
         super(Google, self).__init__(**kwargs)
 
     @coroutine
+    @validate_url
     def short(self, url: str) -> str:
         data = {'longUrl': url}
         params = {'key': self.api_key}
@@ -37,6 +39,7 @@ class Google(BaseShortener):
         raise ShorteningError('Detected an api change for Google')
 
     @coroutine
+    @validate_url
     def expand(self, url: str) -> str:
         params = {'key': self.api_key, 'shortUrl': url}
         response = {}
