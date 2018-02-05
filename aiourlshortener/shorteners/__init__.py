@@ -5,7 +5,7 @@ import os
 
 from .base import BaseShortener
 from ..exceptions import UnknownAioUrlShortenerError
-from ..utils import url_validator
+from ..utils import validate_url
 
 _shorten_class = {}
 _path = os.path.dirname(os.path.realpath(__file__))
@@ -54,6 +54,7 @@ class Shortener(object):
         return self._class.api_url
 
     @coroutine
+    @validate_url
     def short(self, url: str) -> str:
         """
         get short url for given long url
@@ -64,7 +65,6 @@ class Shortener(object):
         :rtype: str
         :raises: ValueError, ShorteningError
         """
-        url_validator(url)
         self.expanded = url
 
         instance = self._class(**self.kwargs)
@@ -76,6 +76,7 @@ class Shortener(object):
         return self.shorten
 
     @coroutine
+    @validate_url
     def expand(self, url: str) -> str:
         """
         expand given short url to long url
@@ -86,7 +87,6 @@ class Shortener(object):
         :rtype: str
         :raises: ValueError, ExpandingError
         """
-        url_validator(url)
         self.shorten = url
 
         instance = self._class(**self.kwargs)
